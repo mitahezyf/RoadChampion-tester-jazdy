@@ -15,9 +15,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 import org.osmdroid.config.Configuration
+import org.osmdroid.library.BuildConfig
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+
+
 
 
 
@@ -58,6 +61,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
+
 
 
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
