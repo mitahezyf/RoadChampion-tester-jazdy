@@ -1,12 +1,12 @@
 Programowanie urządzeń mobilnych laboratorium L_X_ 
 
-# Dokumentacja projetu: ** Temat projektu**
+# Dokumentacja projetu: **Tester jazdy - licznyk gwałtownych przyśpieszeń**
 
 ## Zespoł projetowy:
-_Mirosław Gągorzelewski
-Grażyna Zeszczecina_
+Krzysztof Pomarański
 
 ## Opis projektu
+Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas poruszania się, dodatkowymi funkcjami są także obliczanie średniej prędkości z pokonanej trasy oraz możliwość podglądania jak dana trasa wyglądała na mapie po jej zakończeniu.
 
 
 ## Zakres projektu opis funkcjonalności:
@@ -25,9 +25,9 @@ Grażyna Zeszczecina_
 ###### Opis bazy danych
 
 ## Wykorzystane uprawnienia aplikacji do:
-- Kontaktów,
-- Dostęp do plików,
 - Lokalizacji,
-...
+- Akcelerometru,
+- Wibracji
+
 
 ## Dane potrzebne do konfiguracji podczas pierwszego uruchomienia (jeśli wymagane)
