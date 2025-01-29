@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,9 +41,13 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     private fun onRouteClicked(route: Route) {
+        Log.d("HistoryActivity", "Kliknięto trasę o ID: ${route.id}")
         val intent = Intent(this, RouteDetailsActivity::class.java)
-        intent.putExtra("route", route)
+        intent.putExtra("routeId", route.id)
+        Log.d("HistoryActivity", "Przekazywane ID trasy: ${route?.id}")
+
         startActivity(intent)
     }
+
 
 }

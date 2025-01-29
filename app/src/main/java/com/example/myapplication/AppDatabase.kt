@@ -1,14 +1,18 @@
 package com.example.myapplication
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import android.content.Context
 
-@Database(entities = [Route::class], version = 1)
+
+
+
+
+@Database(entities = [Route::class, RoutePoint::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun routeDao(): RouteDao
+    abstract fun routePointDao(): RoutePointDao
 
     companion object {
         @Volatile
@@ -27,3 +31,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+

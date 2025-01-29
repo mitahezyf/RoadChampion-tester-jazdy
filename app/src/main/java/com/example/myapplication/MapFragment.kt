@@ -13,16 +13,14 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
-import org.osmdroid.library.BuildConfig
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-
-
-
-
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
@@ -33,7 +31,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
     private var currentLocationMarker: Marker? = null
     private var startTime: Long = 0L
     private var endTime: Long = 0L
-
+    private lateinit var database: AppDatabase
+    private lateinit var routePointDao: RoutePointDao
+    private var currentRouteId: Int? = null
+    private var isTracking = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -48,7 +49,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         Configuration.getInstance().load(
             requireContext(),
             requireContext().getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
@@ -59,38 +59,87 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         super.onViewCreated(view, savedInstanceState)
 
 
+        database = AppDatabase.getInstance(requireContext())
+        routePointDao = database.routePointDao()
+
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
 
-
-
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
 
         initializeMapWithDefaultLocation()
 
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            setupLocationUpdates()
-        } else {
-
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        val startButton = view.findViewById<Button>(R.id.startButton)
+        startButton.setOnClickListener {
+            startTracking()
         }
-
 
         val stopButton = view.findViewById<Button>(R.id.stopButton)
         stopButton.setOnClickListener {
-            stopTracking(requireContext())
+            stopTracking()
+        }
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            setupLocationUpdates()
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val lastRouteId = database.routeDao().getLastRouteId()
+            withContext(Dispatchers.Main) {
+                currentRouteId = lastRouteId
+                Log.d("MapFragment", "Przywrócono ostatnią trasę ID: $currentRouteId")
+            }
         }
     }
 
+
+
+    private fun startTracking() {
+        if (isTracking) return
+
+        startTime = System.currentTimeMillis()
+        isTracking = true
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val lastRouteId = database.routeDao().getLastRouteId()
+            val newRouteId = lastRouteId + 1
+
+            val route = Route(id = newRouteId, startTime = startTime, endTime = 0, averageSpeed = 0f)
+            database.routeDao().insertRoute(route)
+
+            withContext(Dispatchers.Main) {
+                currentRouteId = newRouteId
+                Log.d("MapFragment", "Rozpoczęto nową trasę o ID: $currentRouteId")
+            }
+        }
+    }
+
+
+    private fun stopTracking() {
+        if (!isTracking) return
+
+        isTracking = false
+        endTime = System.currentTimeMillis()
+
+        val totalDistance = calculateTotalDistance(geoPoints)
+        val durationInHours = (endTime - startTime) / 3600000.0
+        val averageSpeed = if (durationInHours > 0) (totalDistance / 1000) / durationInHours else 0f
+
+        CoroutineScope(Dispatchers.IO).launch {
+            database.routeDao().updateRoute(currentRouteId ?: 0, startTime, endTime, averageSpeed.toFloat())
+
+            withContext(Dispatchers.Main) {
+                view?.findViewById<Button>(R.id.startButton)?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
+                Log.d("MapFragment", "Trasa ID: $currentRouteId zakończona i zapisana!")
+            }
+        }
+    }
+
+
     private fun setupLocationUpdates() {
         try {
-
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 500L,
@@ -103,22 +152,47 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
+        val geoPoint = GeoPoint(location.latitude, location.longitude)
+
+
         if (!isMapInitialized) {
             initializeMapAtLocation(location)
             isMapInitialized = true
-            startTime = System.currentTimeMillis()
         }
-
-
-        val geoPoint = GeoPoint(location.latitude, location.longitude)
-        geoPoints.add(geoPoint)
-
-
         updateLocationOnMap(location)
+
+
+        if (isTracking) {
+            if (currentRouteId == -1) {
+                Log.e("MapFragment", "Błąd! currentRouteId jest -1, punkty nie będą zapisywane!")
+                return
+            }
+            geoPoints.add(geoPoint)
+
+            val newPoint = RoutePoint(
+                routeId = currentRouteId ?: 0,
+                latitude = location.latitude,
+                longitude = location.longitude,
+                timestamp = System.currentTimeMillis()
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                routePointDao.insertRoutePoint(newPoint)
+                Log.d("Database", "Zapisano punkt: $newPoint")
+            }
+        }
     }
 
+    private fun initializeMapAtLocation(location: Location) {
+        val geoPoint = GeoPoint(location.latitude, location.longitude)
+        mapView.controller.apply {
+            setCenter(geoPoint)
+            setZoom(18.0)
+        }
+        Log.d("Map", "Mapa ustawiona na lokalizację: $geoPoint")
+    }
     private fun initializeMapWithDefaultLocation() {
-        val defaultGeoPoint = GeoPoint(52.2297, 21.0122) // Warszawa
+        val defaultGeoPoint = GeoPoint(50.0413, 21.9990) // Rzeszow
         mapView.controller.apply {
             setCenter(defaultGeoPoint)
             setZoom(15.0)
@@ -126,21 +200,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         Log.d("Map", "Mapa zainicjalizowana na domyślnej lokalizacji.")
     }
 
-    private fun initializeMapAtLocation(location: Location) {
-        val geoPoint = GeoPoint(location.latitude, location.longitude)
-
-
-        mapView.controller.apply {
-            setCenter(geoPoint)
-            setZoom(18.0)
-        }
-
-        Log.d("Map", "Mapa zainicjalizowana na lokalizacji: $geoPoint")
-    }
-
     private fun updateLocationOnMap(location: Location) {
         val geoPoint = GeoPoint(location.latitude, location.longitude)
-
 
         if (currentLocationMarker == null) {
             currentLocationMarker = Marker(mapView).apply {
@@ -154,26 +215,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         }
 
         mapView.invalidate()
-    }
-
-    private fun stopTracking(context: Context) {
-        endTime = System.currentTimeMillis()
-
-
-        val totalDistance = calculateTotalDistance(geoPoints)
-        val durationInHours = (endTime - startTime) / 3600000.0
-        val averageSpeed = if (durationInHours > 0) (totalDistance / 1000) / durationInHours else 0f
-
-
-        DatabaseHelper.saveRouteToDatabase(
-            context = context,
-            startTime = startTime,
-            endTime = endTime,
-            geoPoints = geoPoints,
-            averageSpeed = averageSpeed.toFloat()
-        )
-
-        Log.d("MapFragment", "Trasa zakończona i zapisana w bazie danych.")
     }
 
     private fun calculateTotalDistance(points: List<GeoPoint>): Float {
