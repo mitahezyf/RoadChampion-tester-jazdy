@@ -44,7 +44,7 @@ class HistoryActivity : AppCompatActivity() {
         Log.d("HistoryActivity", "Kliknięto trasę o ID: ${route.id}")
         val intent = Intent(this, RouteDetailsActivity::class.java)
         intent.putExtra("routeId", route.id)
-        Log.d("HistoryActivity", "Przekazywane ID trasy: ${route?.id}")
+        Log.d("HistoryActivity", "Przekazywane ID trasy: ${route.id}")
 
         startActivity(intent)
     }

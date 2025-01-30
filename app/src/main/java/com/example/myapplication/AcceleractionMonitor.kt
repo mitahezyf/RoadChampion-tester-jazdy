@@ -5,47 +5,56 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import kotlin.math.abs
 import kotlin.math.sqrt
 
-class AccelerationDetector(
-    context: Context,
-    private val threshold: Float = 2.0f, //(2 m/s²)
-    private val minSpeed: Float = 1.0f,
-    private val callback: (isAcceleration: Boolean) -> Unit
-) : SensorEventListener {
 
-    private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+interface AccelerationListener {
+    fun onSuddenAccelerationDetected()
+    fun onSuddenBrakingDetected()
+}
+
+class AcceleractionMonitor(context: Context, private val listener: AccelerationListener) : SensorEventListener {
+
+    private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
-    private var lastTimestamp: Long = 0
+    private var lastAcceleration: Float = 0f
+    private val accelerationThreshold = 2.0f  // Próg wykrywania przyspieszeń
+    private val brakingThreshold = -2.0f // Próg gwałtownych hamowań
 
-    fun start() {
+    fun startMonitoring() {
         accelerometer?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
         }
     }
 
-    fun stop() {
+    fun stopMonitoring() {
         sensorManager.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastTimestamp < 3000) return // Pomiar nie częściej niż co 3 sekundy
+            val acceleration = sqrt((it.values[0] * it.values[0] +
+                    it.values[1] * it.values[1] +
+                    it.values[2] * it.values[2]).toDouble()).toFloat()
 
-            val acceleration = sqrt((it.values[0] * it.values[0]) + (it.values[1] * it.values[1]) + (it.values[2] * it.values[2]))
+            val delta = acceleration - lastAcceleration
 
-            if (acceleration > threshold) {
-                callback(true)  // Gwałtowne przyspieszenie
-            } else if (acceleration < -threshold) {
-                callback(false) // Gwałtowne hamowanie
+            if (delta > accelerationThreshold) {
+                listener.onSuddenAccelerationDetected()
+            } else if (delta < brakingThreshold) {
+                listener.onSuddenBrakingDetected()
             }
 
-            lastTimestamp = currentTime
+            lastAcceleration = acceleration
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        //NIE UŻYWANE ALE BROŃ CIĘ BOŻE WYWALIĆ
+    }
+
+
 }
+

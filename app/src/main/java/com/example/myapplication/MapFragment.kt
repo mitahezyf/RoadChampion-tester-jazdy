@@ -3,8 +3,6 @@ package com.example.myapplication
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -23,9 +21,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import kotlin.math.sqrt
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
+
 
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
@@ -41,13 +37,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
     private var currentRouteId: Int? = null
     private var isTracking = false
 
+    private lateinit var acceleractionMonitor: AcceleractionMonitor
 
-    private lateinit var sensorManager: SensorManager
-    private var accelerometer: Sensor? = null
-    private var lastAcceleration: Float = 0f
-    private var acceleration: Float = 0f
-    private var suddenAccelerationCount = 0
-    private val ACCELERATION_THRESHOLD = 2.0f  // Próg wykrywania gwałtownego przyspieszenia
+
+
 
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -83,8 +76,17 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
         initializeMapWithDefaultLocation()
 
-        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
+
+        acceleractionMonitor = AcceleractionMonitor(requireContext(), object : AccelerationListener {
+            override fun onSuddenAccelerationDetected() {
+                Log.d("MapFragment", "Wykryto gwałtowne przyspieszenie!")
+            }
+
+            override fun onSuddenBrakingDetected() {
+                Log.d("MapFragment", "Wykryto gwałtowne hamowanie!")
+            }
+        })
+
 
 
         val startButton = view.findViewById<Button>(R.id.startButton)
@@ -110,40 +112,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
                 Log.d("MapFragment", "Przywrócono ostatnią trasę ID: $currentRouteId")
             }
         }
+
+
     }
-
-    private val sensorEventListener = object : SensorEventListener {
-        override fun onSensorChanged(event: SensorEvent?) {
-            if (event != null) {
-                val ax = event.values[0]
-                val ay = event.values[1]
-                val az = event.values[2]
-
-
-                val accelerationCurrent = sqrt((ax * ax + ay * ay + az * az).toDouble()).toFloat()
-
-
-                if (accelerationCurrent - lastAcceleration > ACCELERATION_THRESHOLD) {
-                    suddenAccelerationCount++
-                    Log.d("MapFragment", "Wykryto gwałtowne przyspieszenie! Liczba: $suddenAccelerationCount")
-                    updateAccelerationCounterUI()
-                }
-
-                lastAcceleration = accelerationCurrent
-            }
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-            //NIE DOTYKAĆ NIE UŻYWANE ALE NIE MOŻE ZNIKNĄĆ !!!!!!!!
-        }
-    }
-
-    private fun updateAccelerationCounterUI() {
-        requireActivity().runOnUiThread {
-
-        }
-    }
-
 
     private fun startTracking() {
         if (isTracking) return
@@ -287,15 +258,15 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        accelerometer?.let {
-            sensorManager.registerListener(sensorEventListener, it, SensorManager.SENSOR_DELAY_UI)
-        }
+        acceleractionMonitor.startMonitoring()
+
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
-        sensorManager.unregisterListener(sensorEventListener)
+        acceleractionMonitor.stopMonitoring()
+
     }
 
 }

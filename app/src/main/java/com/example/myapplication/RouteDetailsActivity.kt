@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 
+@Suppress("DEPRECATION")
 class RouteDetailsActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
@@ -49,6 +51,7 @@ class RouteDetailsActivity : AppCompatActivity() {
         loadRouteDetails()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadRouteDetails() {
         CoroutineScope(Dispatchers.IO).launch {
             val routeWithPoints = database.routeDao().getRouteWithPoints(routeId)
