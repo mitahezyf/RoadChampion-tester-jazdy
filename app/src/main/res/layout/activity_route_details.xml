@@ -8,5 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"/>
+    <TextView
+        android:id="@+id/accelerationCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Przyspieszenia: 0"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/brakingCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hamowania: 0"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"/>
 
 </RelativeLayout>

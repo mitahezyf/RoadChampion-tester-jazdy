@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-                    //biblioteka map
+
     implementation(libs.osmdroid.android)
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)

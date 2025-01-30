@@ -3,22 +3,26 @@ package com.example.myapplication
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RouteDetailsActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var database: AppDatabase
     private var routeId: Int = -1
+
+    private lateinit var accelerationCountText: TextView
+    private lateinit var brakingCountText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +32,9 @@ class RouteDetailsActivity : AppCompatActivity() {
 
         mapView = findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
+
+        accelerationCountText = findViewById(R.id.accelerationCount)
+        brakingCountText = findViewById(R.id.brakingCount)
 
         database = AppDatabase.getInstance(this)
 
@@ -57,6 +64,11 @@ class RouteDetailsActivity : AppCompatActivity() {
 
                 Log.d("RouteDetails", "Załadowano punkty: ${routePoints.size}")
 
+                // Wyświetlenie liczników na UI
+                accelerationCountText.text = "Przyspieszenia: ${route.suddenAccelerations}"
+                brakingCountText.text = "Hamowania: ${route.suddenBrakings}"
+
+
                 if (routePoints.isNotEmpty()) {
                     val firstPoint = routePoints.first()
                     mapView.controller.setCenter(firstPoint)
@@ -65,7 +77,7 @@ class RouteDetailsActivity : AppCompatActivity() {
                     val overlay = Polyline().apply {
                         setPoints(routePoints)
                         color = Color.BLUE
-                        width = 5.0f
+                        width = 20.0f
                     }
 
                     mapView.overlayManager.add(overlay)

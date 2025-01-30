@@ -35,6 +35,9 @@ interface RouteDao {
     @Query("SELECT COALESCE(MAX(id), 0) FROM routes")
     fun getLastRouteId(): Int
 
+    @Query("UPDATE routes SET suddenAccelerations = :accels, suddenBrakings = :brakes WHERE id = :routeId")
+    suspend fun updateAccelerationData(routeId: Int, accels: Int, brakes: Int)
+
 
 
 
