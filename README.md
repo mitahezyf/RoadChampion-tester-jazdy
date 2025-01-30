@@ -20,9 +20,11 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
 ...
 
 ## Baza danych
-###### Diagram ERD
+<div align="center">
+  <img src="Diagram ERD.PNG" align=center>
+</div>
 
-###### Opis bazy danych
+Baza danych składa się z 2 tabel. Pierwsza z nich przechowuje dane na temat czasu startu i końca danej trasy, średniej prędkości z trasy oraz ilości przyśpieszeń i hamowań, Natomiast druga tabela jest w relacji 1:N z zapisanymy koordynatami każdego zapisanego punktu lokalizacji wraz z sygnaturą czasową timestamp.
 
 ## Wykorzystane uprawnienia aplikacji do:
 - Lokalizacji,
@@ -30,4 +32,4 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
 - Wibracji
 
 
-## Dane potrzebne do konfiguracji podczas pierwszego uruchomienia (jeśli wymagane)
+Aplikacja nie potrzebuje żadnej wstępnej konfiguracji, jest w postaci "install&play"
