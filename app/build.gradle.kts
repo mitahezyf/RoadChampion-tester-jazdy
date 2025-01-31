@@ -49,6 +49,13 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.gson)
     implementation (libs.androidx.recyclerview)
+    implementation (libs.material)
+    implementation (libs.androidx.cardview)
+
+
+
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -2,9 +2,10 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 
 class MainMenuActivity : AppCompatActivity() {
 
@@ -12,21 +13,17 @@ class MainMenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
 
-
-        findViewById<Button>(R.id.buttonOpenMap).setOnClickListener {
+        findViewById<LinearLayout>(R.id.cardNewRoute).setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
-
-        findViewById<Button>(R.id.buttonHistory).setOnClickListener {
+        findViewById<LinearLayout>(R.id.cardHistory).setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
             startActivity(intent)
         }
 
-
-        findViewById<Button>(R.id.buttonSettings).setOnClickListener {
-
+        findViewById<LinearLayout>(R.id.cardSettings).setOnClickListener {
             Toast.makeText(this, "Ustawienia w przygotowaniu!", Toast.LENGTH_SHORT).show()
         }
     }

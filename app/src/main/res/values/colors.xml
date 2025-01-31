@@ -10,4 +10,8 @@
 
     <color name="red">#FF0000</color>
     <color name="green">#00FF00</color>
+
+    <color name="background">#F5F5F5</color>
+    <color name="primary_text">#212121</color>
+<!--    <color name="primary_text">#212121</color>-->
 </resources>

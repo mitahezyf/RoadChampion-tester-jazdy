@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="menu_main">Menu Główne</string>
+    <string name="new_route">Nowa Trasa</string>
+    <string name="history">Historia Tras</string>
+    <string name="settings">Ustawienia</string>
 </resources>
