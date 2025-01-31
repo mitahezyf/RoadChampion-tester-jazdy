@@ -4,4 +4,6 @@
     <string name="new_route">Nowa Trasa</string>
     <string name="history">Historia Tras</string>
     <string name="settings">Ustawienia</string>
+    <string name="data_text">Dystans: 0 km | Czas: 0 min | Śr. prędkość: 0 km/h</string>
+    <string name="route_nr">Trasa #</string>
 </resources>

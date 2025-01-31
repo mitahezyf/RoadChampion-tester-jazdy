@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class RouteAdapter(private val onRouteClick: (Route) -> Unit) :
@@ -21,7 +22,7 @@ class RouteAdapter(private val onRouteClick: (Route) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_2, parent, false)
+            .inflate(R.layout.item_route, parent, false)
         return RouteViewHolder(view, onRouteClick)
     }
 
@@ -35,14 +36,20 @@ class RouteAdapter(private val onRouteClick: (Route) -> Unit) :
     class RouteViewHolder(view: View, private val onRouteClick: (Route) -> Unit) :
         RecyclerView.ViewHolder(view) {
 
-        private val title = view.findViewById<TextView>(android.R.id.text1)
-        private val subtitle = view.findViewById<TextView>(android.R.id.text2)
+        private val cardView: CardView = view.findViewById(R.id.cardRoute)
+        private val title: TextView = view.findViewById(R.id.textRouteTitle)
+        private val subtitle: TextView = view.findViewById(R.id.textRouteDetails)
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "DefaultLocale")
         fun bind(route: Route) {
-            title.text = "Trasa ID: ${route.id}"
-            subtitle.text = "Średnia prędkość: ${route.averageSpeed} km/h"
-            itemView.setOnClickListener { onRouteClick(route) }
+            val formattedDistance = String.format("%.2f", route.distance)
+            val durationInMinutes = route.duration / 60000
+            val formattedSpeed = String.format("%.2f", route.averageSpeed)
+
+            title.text = "Trasa #${route.id}"
+            subtitle.text = "Dystans: $formattedDistance km | Czas: $durationInMinutes min | Śr. prędkość: $formattedSpeed km/h"
+
+            cardView.setOnClickListener { onRouteClick(route) }
         }
     }
 }

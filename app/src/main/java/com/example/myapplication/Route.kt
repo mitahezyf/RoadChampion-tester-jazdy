@@ -17,6 +17,8 @@ data class Route(
     val endTime: Long,
     val averageSpeed: Float,
     val suddenAccelerations: Int = 0,
-    val suddenBrakings: Int = 0
+    val suddenBrakings: Int = 0,
+    val distance: Float,
+    val duration: Long
 
 ) : Parcelable

@@ -126,7 +126,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             val lastRouteId = database.routeDao().getLastRouteId()
             val newRouteId = lastRouteId + 1
 
-            val route = Route(id = newRouteId, startTime = startTime, endTime = 0, averageSpeed = 0f)
+            val route = Route(id = newRouteId, startTime = startTime, endTime = 0, averageSpeed = 0f, distance = 0f, duration = 0)
+
             database.routeDao().insertRoute(route)
 
             withContext(Dispatchers.Main) {
@@ -143,12 +144,19 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         isTracking = false
         endTime = System.currentTimeMillis()
 
+        val duration = endTime - startTime
         val totalDistance = calculateTotalDistance(geoPoints)
         val durationInHours = (endTime - startTime) / 3600000.0
         val averageSpeed = if (durationInHours > 0) (totalDistance / 1000) / durationInHours else 0f
 
         CoroutineScope(Dispatchers.IO).launch {
-            database.routeDao().updateRoute(currentRouteId ?: 0, startTime, endTime, averageSpeed.toFloat())
+            database.routeDao().updateRoute(currentRouteId ?: 0,
+                startTime,
+                endTime,
+                averageSpeed.toFloat(),
+                totalDistance,
+                duration)
+
 
             withContext(Dispatchers.Main) {
                 view?.findViewById<Button>(R.id.startButton)?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
