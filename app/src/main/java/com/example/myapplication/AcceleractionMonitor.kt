@@ -20,8 +20,8 @@ class AcceleractionMonitor(context: Context, private val listener: AccelerationL
     private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
     private var lastAcceleration: Float = 0f
-    private val accelerationThreshold = 2.0f  // Próg wykrywania przyspieszeń
-    private val brakingThreshold = -2.0f // Próg gwałtownych hamowań
+    private val accelerationThreshold = 2.0f  // Próg przyspieszeń w m/s2
+    private val brakingThreshold = -2.0f // Próg  hamowanń w m/s2
 
     fun startMonitoring() {
         accelerometer?.let {
@@ -52,7 +52,7 @@ class AcceleractionMonitor(context: Context, private val listener: AccelerationL
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        //NIE UŻYWANE ALE BROŃ CIĘ BOŻE WYWALIĆ
+        //NIE WIEM JAK I DLACZEGO ALE BROŃ CIĘ BOŻE WYWALIĆ
     }
 
 

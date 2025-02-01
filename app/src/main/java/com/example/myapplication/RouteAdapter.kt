@@ -42,7 +42,7 @@ class RouteAdapter(private val onRouteClick: (Route) -> Unit) :
 
         @SuppressLint("SetTextI18n", "DefaultLocale")
         fun bind(route: Route) {
-            val formattedDistance = String.format("%.2f", route.distance)
+            val formattedDistance = String.format("%.2f", route.distance / 1000)
             val durationInMinutes = route.duration / 60000
             val formattedSpeed = String.format("%.2f", route.averageSpeed)
 

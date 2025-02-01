@@ -6,4 +6,23 @@
     <string name="settings">Ustawienia</string>
     <string name="data_text">Dystans: 0 km | Czas: 0 min | Śr. prędkość: 0 km/h</string>
     <string name="route_nr">Trasa #</string>
+
+
+    <string name="start_time_label">Godzina startu:&#160;</string>
+    <string name="end_time_label">Godzina zakończenia:&#160;</string>
+    <string name="distance_label">Dystans:&#160;</string>
+    <string name="duration_label">Czas trwania:&#160;</string>
+    <string name="avg_speed_label">Średnia prędkość:&#160;</string>
+    <string name="accelerations_label">Gwałtowne przyspieszenia:&#160;</string>
+    <string name="brakings_label">Gwałtowne hamowania:&#160;</string>
+
+
+    <string name="route_details">Szczegóły trasy</string>
+    <string name="back">Powrót</string>
+    <string name="time_placeholder">--:--</string>
+    <string name="velocity_placeholder">0.00 km</string>
+    <string name="speed_placeholder">0.00 km/h</string>
+    <string name="duration_placeholder">00:00</string>
+    <string name="useless_placeholder">opis</string>
+    <string name="zero_placeholder">0</string>
 </resources>

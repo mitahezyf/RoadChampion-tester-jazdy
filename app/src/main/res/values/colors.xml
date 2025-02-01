@@ -13,5 +13,8 @@
 
     <color name="background">#F5F5F5</color>
     <color name="primary_text">#212121</color>
-<!--    <color name="primary_text">#212121</color>-->
+
+
+    <color name="card_background">#FFFFFF</color>
+    <color name="primary">#6200EE</color>
 </resources>
