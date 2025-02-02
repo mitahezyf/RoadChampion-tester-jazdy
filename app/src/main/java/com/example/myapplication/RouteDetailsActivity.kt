@@ -83,10 +83,15 @@ class RouteDetailsActivity : AppCompatActivity() {
     }
 
     private fun drawRouteOnMap(points: List<RoutePoint>) {
+        if (points.isEmpty()) return
+
         val mapController = mapView.controller
-        if (points.isNotEmpty()) {
-            mapController.setCenter(GeoPoint(points.first().latitude, points.first().longitude))
-            mapController.setZoom(15.0)
+
+
+        mapView.postDelayed({
+            val startPoint = GeoPoint(points.first().latitude, points.first().longitude)
+            mapController.setCenter(startPoint)
+            mapController.setZoom(18.0)
 
             val polyline = Polyline().apply {
                 color = Color.BLUE
@@ -95,7 +100,7 @@ class RouteDetailsActivity : AppCompatActivity() {
             }
 
             val startMarker = Marker(mapView).apply {
-                position = GeoPoint(points.first().latitude, points.first().longitude)
+                position = startPoint
                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                 title = "Start"
             }
@@ -106,12 +111,19 @@ class RouteDetailsActivity : AppCompatActivity() {
                 title = "Koniec"
             }
 
+
+            mapView.overlays.clear()
             mapView.overlays.add(polyline)
             mapView.overlays.add(startMarker)
             mapView.overlays.add(endMarker)
             mapView.invalidate()
-        }
+
+
+            mapController.animateTo(startPoint)
+
+        }, 1000)
     }
+
 
     @SuppressLint("SimpleDateFormat")
     private fun formatTime(timestamp: Long): String {

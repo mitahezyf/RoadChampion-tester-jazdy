@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,8 +10,10 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +42,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
     private lateinit var acceleractionMonitor: AcceleractionMonitor
 
+    private var isFollowingUser = true
+
 
 
 
@@ -62,9 +67,9 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         database = AppDatabase.getInstance(requireContext())
         routePointDao = database.routePointDao()
@@ -76,7 +81,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
         initializeMapWithDefaultLocation()
 
-
         acceleractionMonitor = AcceleractionMonitor(requireContext(), object : AccelerationListener {
             override fun onSuddenAccelerationDetected() {
                 Log.d("MapFragment", "Wykryto gwałtowne przyspieszenie!")
@@ -87,23 +91,29 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             }
         })
 
+        val startButton = view.findViewById<CardView>(R.id.cardStart)
+        val stopButton = view.findViewById<CardView>(R.id.cardStop)
+        val backButton = view.findViewById<CardView>(R.id.cardBack)
 
 
-        val startButton = view.findViewById<Button>(R.id.startButton)
-        startButton.setOnClickListener {
-            startTracking()
-        }
 
-        val stopButton = view.findViewById<Button>(R.id.stopButton)
-        stopButton.setOnClickListener {
-            stopTracking()
-        }
+        startButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.default_button_color))
+        stopButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.default_button_color))
+
+
+        startButton.setOnClickListener { startTracking() }
+        stopButton.setOnClickListener { stopTracking() }
+        backButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+
+
+
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             setupLocationUpdates()
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
+
 
         CoroutineScope(Dispatchers.IO).launch {
             val lastRouteId = database.routeDao().getLastRouteId()
@@ -112,9 +122,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
                 Log.d("MapFragment", "Przywrócono ostatnią trasę ID: $currentRouteId")
             }
         }
-
-
     }
+
+
+
 
     private fun startTracking() {
         if (isTracking) return
@@ -126,17 +137,26 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             val lastRouteId = database.routeDao().getLastRouteId()
             val newRouteId = lastRouteId + 1
 
-            val route = Route(id = newRouteId, startTime = startTime, endTime = 0, averageSpeed = 0f, distance = 0f, duration = 0)
+            val route = Route(
+                id = newRouteId,
+                startTime = startTime,
+                endTime = 0,
+                averageSpeed = 0f,
+                distance = 0f,
+                duration = 0
+            )
 
             database.routeDao().insertRoute(route)
 
             withContext(Dispatchers.Main) {
                 currentRouteId = newRouteId
                 Log.d("MapFragment", "Rozpoczęto nową trasę o ID: $currentRouteId")
+
+
+                Toast.makeText(requireContext(), "Rozpoczęto nagrywanie trasy", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
     private fun stopTracking() {
         if (!isTracking) return
@@ -150,20 +170,28 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         val averageSpeed = if (durationInHours > 0) (totalDistance / 1000) / durationInHours else 0f
 
         CoroutineScope(Dispatchers.IO).launch {
-            database.routeDao().updateRoute(currentRouteId ?: 0,
+            database.routeDao().updateRoute(
+                currentRouteId ?: 0,
                 startTime,
                 endTime,
                 averageSpeed.toFloat(),
                 totalDistance,
-                duration)
-
+                duration
+            )
 
             withContext(Dispatchers.Main) {
-                view?.findViewById<Button>(R.id.startButton)?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green))
                 Log.d("MapFragment", "Trasa ID: $currentRouteId zakończona i zapisana!")
+
+
+                Toast.makeText(requireContext(), "Zatrzymano nagrywanie trasy", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
+
+
+
+
 
 
     private fun setupLocationUpdates() {
@@ -179,9 +207,13 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     override fun onLocationChanged(location: Location) {
         val geoPoint = GeoPoint(location.latitude, location.longitude)
 
+        if (isFollowingUser) {
+            mapView.controller.animateTo(geoPoint)
+        }
 
         if (!isMapInitialized) {
             initializeMapAtLocation(location)
@@ -189,6 +221,13 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         }
         updateLocationOnMap(location)
 
+
+        val speedMps = location.speed
+        val speedKmh = speedMps * 3.6 // Przeliczenie na km/h
+
+
+        val speedTextView = view?.findViewById<TextView>(R.id.textSpeed)
+        speedTextView?.text = String.format("%.1f km/h", speedKmh)
 
         if (isTracking) {
             if (currentRouteId == -1) {
@@ -210,6 +249,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             }
         }
     }
+
 
     private fun initializeMapAtLocation(location: Location) {
         val geoPoint = GeoPoint(location.latitude, location.longitude)

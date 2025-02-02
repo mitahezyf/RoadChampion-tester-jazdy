@@ -16,6 +16,8 @@
     <string name="accelerations_label">Gwałtowne przyspieszenia:&#160;</string>
     <string name="brakings_label">Gwałtowne hamowania:&#160;</string>
 
+    <string name="current_speed_label">Aktualna prędkość:&#160;</string>
+
 
     <string name="route_details">Szczegóły trasy</string>
     <string name="back">Powrót</string>
@@ -25,4 +27,13 @@
     <string name="duration_placeholder">00:00</string>
     <string name="useless_placeholder">opis</string>
     <string name="zero_placeholder">0</string>
+
+
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+
+    <string name="map_view">Widok mapy</string>
+
+    <string name="follow_me">Wyśrodkuj</string>
+
 </resources>
