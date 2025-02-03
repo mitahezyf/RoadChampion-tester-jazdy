@@ -29,6 +29,7 @@ class HistoryActivity : AppCompatActivity() {
 
         val backButton = findViewById<CardView>(R.id.cardBack)
         backButton.setOnClickListener {
+            VibrationHelper.vibrate(this)
             finish()
         }
 
@@ -51,7 +52,7 @@ class HistoryActivity : AppCompatActivity() {
         val intent = Intent(this, RouteDetailsActivity::class.java)
         intent.putExtra("routeId", route.id)
         Log.d("HistoryActivity", "Przekazywane ID trasy: ${route.id}")
-
+        VibrationHelper.vibrate(this)
         startActivity(intent)
     }
 

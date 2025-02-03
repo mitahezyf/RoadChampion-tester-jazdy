@@ -24,6 +24,7 @@ class AccelerometerTestActivity : AppCompatActivity(), AccelerationListener {
 
         val buttonBack: LinearLayout = findViewById(R.id.buttonBack)
         buttonBack.setOnClickListener {
+            VibrationHelper.vibrate(this)
             finish()
         }
 
@@ -37,6 +38,7 @@ class AccelerometerTestActivity : AppCompatActivity(), AccelerationListener {
         accelerometerMonitor = AcceleractionMonitor(this, this)
 
         buttonStartStop.setOnClickListener {
+            VibrationHelper.vibrate(this)
             if (isMonitoring) {
                 accelerometerMonitor.stopMonitoring()
                 textStartStop.text = "Rozpocznij test"

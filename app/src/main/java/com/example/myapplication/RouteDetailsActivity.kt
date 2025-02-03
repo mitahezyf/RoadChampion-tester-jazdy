@@ -31,6 +31,7 @@ class RouteDetailsActivity : AppCompatActivity() {
         org.osmdroid.config.Configuration.getInstance().userAgentValue = packageName
 
         findViewById<CardView>(R.id.cardBack).setOnClickListener {
+            VibrationHelper.vibrate(this)
             finish()
         }
 

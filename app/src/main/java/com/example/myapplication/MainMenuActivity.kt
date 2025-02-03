@@ -22,16 +22,19 @@ class MainMenuActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.cardNewRoute).setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            VibrationHelper.vibrate(this)
             startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.cardHistory).setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
+            VibrationHelper.vibrate(this)
             startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.cardSettings).setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            VibrationHelper.vibrate(this)
             startActivity(intent)
         }
 

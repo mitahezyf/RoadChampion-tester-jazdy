@@ -78,9 +78,20 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
         val stopButton = view.findViewById<CardView>(R.id.cardStop)
         val backButton = view.findViewById<CardView>(R.id.cardBack)
 
-        startButton.setOnClickListener { startTracking() }
-        stopButton.setOnClickListener { stopTracking() }
-        backButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+        startButton.setOnClickListener {
+            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            startTracking()
+        }
+
+        stopButton.setOnClickListener {
+            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            stopTracking()
+        }
+
+        backButton.setOnClickListener {
+            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             setupLocationUpdates()

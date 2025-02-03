@@ -23,11 +23,13 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<CardView>(R.id.cardChangeProfile).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
+            VibrationHelper.vibrate(this)
         }
 
 
         findViewById<CardView>(R.id.cardAccelerometerTest).setOnClickListener {
             startActivity(Intent(this, AccelerometerTestActivity::class.java))
+            VibrationHelper.vibrate(this)
         }
 
 
@@ -42,9 +44,11 @@ class SettingsActivity : AppCompatActivity() {
         switchTheme = findViewById(R.id.switchTheme)
         switchTheme.isChecked = isDarkModeEnabled()
         switchTheme.setOnCheckedChangeListener { _, isChecked ->
+            VibrationHelper.vibrate(this)
             setDarkMode(isChecked)
         }
         findViewById<CardView>(R.id.cardBack).setOnClickListener {
+            VibrationHelper.vibrate(this)
             finish()
         }
     }

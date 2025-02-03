@@ -38,10 +38,12 @@ class ProfileActivity : AppCompatActivity() {
         loadProfileImage()
 
         cardChangePhoto.setOnClickListener {
+            VibrationHelper.vibrate(this)
             showImagePickerDialog()
         }
 
         cardBack.setOnClickListener {
+            VibrationHelper.vibrate(this)
             finish()
         }
     }
