@@ -20,6 +20,7 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
   Użytkownik ma możliwość testowania akcelerometru czy wykrywa on gwałtowne przyśpieszenia/hamowania czy też jest w stanie wsględnego spoczynku
 
 ## Panele / zakładki aplikacji 
+<div align="center">
 | **Menu główne (jasny)** | **Menu główne (ciemny)** |
 |--------------------------|--------------------------|
 | <img src="images/menu-glowne-bialy.png" width="300"/> | <img src="images/menu-glowne-czarny.png" width="300"/> |
@@ -39,7 +40,7 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
 | **Test akcelerometru** | **Zmiana profilowego** |
 |------------------------|-----------------------|
 | <img src="images/test-akcelerometru-czarny.png" width="300"/> | <img src="images/zmiana-profilowego-czarne.png" width="300"/> |
-
+</div>
 
 ## Baza danych
 <div align="center">
@@ -57,3 +58,6 @@ Baza danych składa się z 2 tabel. Pierwsza z nich przechowuje dane na temat cz
 
 
 Aplikacja nie potrzebuje żadnej wstępnej konfiguracji, jest w postaci "install&play"
+
+### Link do pobrania pliku APK aplikacji
+https://urstudrzeszow-my.sharepoint.com/:u:/g/personal/kp125199_stud_ur_edu_pl/EZDHTs_lPfhKtGu2xCAPXtcBnCWmJAaIhlLCi44fvC3aoA?e=zX17DZ
