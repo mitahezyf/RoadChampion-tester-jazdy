@@ -24,7 +24,7 @@ class MainMenuActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.cardSettings).setOnClickListener {
-            Toast.makeText(this, "Ustawienia w przygotowaniu!", Toast.LENGTH_SHORT).show()
-        }
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)        }
     }
 }

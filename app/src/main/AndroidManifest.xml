@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Uprawnienia do lokalizacji -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
-<!--                        permisje do lokalizacji-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Uprawnienia do dostępu do multimediów -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <queries>
+        <intent>
+            <action android:name="android.provider.action.PICK_IMAGES" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -37,6 +52,21 @@
         <activity android:name=".RouteDetailsActivity"
             android:exported="true"
             android:theme="@style/Theme.MyApplication" />
+        <activity android:name=".SettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication"/>
+        <activity
+        android:name=".ProfileActivity"
+        android:exported="true"
+        android:theme="@style/Theme.MyApplication"/>
+
+
+        <activity
+            android:name=".AccelerometerTestActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MyApplication"/>
+
+
 
 
 
@@ -44,5 +74,6 @@
             android:name="org.osmdroid.config"
             android:value="osmdroid" />
     </application>
+
 
 </manifest>

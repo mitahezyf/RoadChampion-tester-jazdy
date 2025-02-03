@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Zmiana zdjęcia profilowego -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardChangeProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_camera"
+                android:contentDescription="@string/change_profile_picture"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_profile_picture"
+                android:textSize="18sp"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Włącz/wyłącz wibracje -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardVibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_vibration"
+                android:contentDescription="@string/vibration"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/vibration"
+                android:textSize="18sp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"/>  <!-- 🚀 Wypycha Switch na prawo -->
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchVibration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Test akcelerometru -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAccelerometerTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_accelerometer"
+                android:contentDescription="@string/accelerometer_test"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/accelerometer_test"
+                android:textSize="18sp"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Tryb jasny/ciemny -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_theme"
+                android:contentDescription="@string/theme_mode"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_mode"
+                android:textSize="18sp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"/>  <!-- 🚀 Dodajemy wagę, by zepchnąć Switch na prawo -->
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="@string/back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:textSize="18sp"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

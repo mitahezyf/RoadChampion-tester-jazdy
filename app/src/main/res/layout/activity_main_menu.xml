@@ -8,6 +8,30 @@
     android:padding="16dp"
     android:gravity="center"
     android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <!-- Powiększone zdjęcie profilowe -->
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/useless_placeholder"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            android:background="@drawable/profile_circle"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textViewTitle"

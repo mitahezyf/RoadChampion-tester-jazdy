@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="menu_main">Menu Główne</string>
+    <string name="menu_main">Witaj wodzu!</string>
     <string name="new_route">Nowa Trasa</string>
     <string name="history">Historia Tras</string>
     <string name="settings">Ustawienia</string>
@@ -35,5 +35,18 @@
     <string name="map_view">Widok mapy</string>
 
     <string name="follow_me">Wyśrodkuj</string>
+
+    <string name="accelerometer_test">Test akcelerometru</string>
+    <string name="vibration">Wibracje</string>
+    <string name="change_profile_picture">Zmień zdjęcie profilowe</string>
+    <string name="theme_mode">Motyw</string>
+
+    <string name="change_photo">Zmień zdjęcie</string>
+    <string name="profile_picture">Zdjęcie profilowe</string>
+    <string name="start_test">Rozpocznij test</string>
+
+    <string name="accel_x">X: 0.00 m/s²</string>
+    <string name="accel_y">Y: 0.00 m/s²</string>
+    <string name="accel_z">Z: 0.00 m/s²</string>
 
 </resources>
