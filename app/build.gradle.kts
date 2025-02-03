@@ -51,7 +51,7 @@ dependencies {
     implementation (libs.androidx.recyclerview)
     implementation (libs.material)
     implementation (libs.androidx.cardview)
-
+    implementation(libs.androidx.activity.ktx)
 
 
 
