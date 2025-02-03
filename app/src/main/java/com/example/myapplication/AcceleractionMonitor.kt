@@ -19,7 +19,7 @@ class AcceleractionMonitor(context: Context, private val listener: AccelerationL
 
     private val sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val accelerometer: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)
 
     private var lastAcceleration: Float = 0f
     private var filteredAcceleration: Float = 0f
