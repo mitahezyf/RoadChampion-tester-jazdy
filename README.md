@@ -20,11 +20,26 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
   Użytkownik ma możliwość testowania akcelerometru czy wykrywa on gwałtowne przyśpieszenia/hamowania czy też jest w stanie wsględnego spoczynku
 
 ## Panele / zakładki aplikacji 
-- Panel logowania
+| **Menu główne (jasny)** | **Menu główne (ciemny)** |
+|--------------------------|--------------------------|
+| <img src="images/menu-glowne-bialy.png" width="300"/> | <img src="images/menu-glowne-czarny.png" width="300"/> |
 
-![image](https://github.com/user-attachments/assets/a271c59d-e3f5-4c74-99b5-7300d4db32a4)
+| **Nowa trasa (jasny)** | **Nowa trasa (ciemny)** |
+|-------------------------|-------------------------|
+| <img src="images/nowa-trasa-bialy.png" width="300"/> | <img src="images/nowa-trasa-czarny.png" width="300"/> |
 
-...
+| **Rozpoczęcie nowej trasy** | **Lista tras w historii** |
+|-----------------------------|---------------------------|
+| <img src="images/rozpoczecie-trasy-toast-czarny.png" width="300"/> | <img src="images/historia-tras-czarny.png" width="300"/> |
+
+| **Detale trasy** | **Panel ustawień** |
+|------------------|-------------------|
+| <img src="images/detale-trasy-czarny.png" width="300"/> | <img src="images/ustawienia-biale.png" width="300"/> |
+
+| **Test akcelerometru** | **Zmiana profilowego** |
+|------------------------|-----------------------|
+| <img src="images/test-akcelerometru-czarny.png" width="300"/> | <img src="images/zmiana-profilowego-czarne.png" width="300"/> |
+
 
 ## Baza danych
 <div align="center">
