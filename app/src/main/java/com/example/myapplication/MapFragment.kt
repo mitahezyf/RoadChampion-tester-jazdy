@@ -79,17 +79,17 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
         val backButton = view.findViewById<CardView>(R.id.cardBack)
 
         startButton.setOnClickListener {
-            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            VibrationHelper.vibrate(requireContext())
             startTracking()
         }
 
         stopButton.setOnClickListener {
-            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            VibrationHelper.vibrate(requireContext())
             stopTracking()
         }
 
         backButton.setOnClickListener {
-            VibrationHelper.vibrate(requireContext()) // Wibracja na kliknięcie
+            VibrationHelper.vibrate(requireContext())
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
@@ -114,6 +114,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
 
     private fun startTracking() {
         if (isTracking) return
+
+        accelerationCount = 0
+        brakingCount = 0
+        updateAccelerationUI()
+
 
         startTime = System.currentTimeMillis()
         isTracking = true
@@ -261,8 +266,8 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
     @SuppressLint("SetTextI18n")
     private fun updateAccelerationUI() {
         requireActivity().runOnUiThread {
-            textAccelerationCount.text = "Nagłe przyspieszenia: $accelerationCount"
-            textBrakingCount.text = "Nagłe hamowania: $brakingCount"
+            textAccelerationCount.text = accelerationCount.toString()
+            textBrakingCount.text = brakingCount.toString()
         }
     }
 

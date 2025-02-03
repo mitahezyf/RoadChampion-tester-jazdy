@@ -56,6 +56,7 @@ class AccelerometerTestActivity : AppCompatActivity(), AccelerationListener {
     override fun onSuddenAccelerationDetected() {
         runOnUiThread {
             textStatus.text = "Gwałtowne przyspieszenie!"
+            resetStatusAfterDelay()
         }
     }
 
@@ -63,6 +64,7 @@ class AccelerometerTestActivity : AppCompatActivity(), AccelerationListener {
     override fun onSuddenBrakingDetected() {
         runOnUiThread {
             textStatus.text = "Gwałtowne hamowanie!"
+            resetStatusAfterDelay()
         }
     }
 
@@ -73,5 +75,13 @@ class AccelerometerTestActivity : AppCompatActivity(), AccelerationListener {
             textY.text = "Y: ${"%.2f".format(y)} m/s²"
             textZ.text = "Z: ${"%.2f".format(z)} m/s²"
         }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun resetStatusAfterDelay() {
+        textStatus.postDelayed({
+            runOnUiThread {
+                textStatus.text = "Spoczynek"
+            }
+        }, 1000) //
     }
 }

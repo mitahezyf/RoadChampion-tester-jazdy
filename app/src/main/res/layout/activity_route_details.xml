@@ -27,8 +27,10 @@
         android:layout_width="match_parent"
         android:layout_height="450dp"
         android:background="@color/card_background"
-        android:elevation="4dp"
-        android:layout_marginBottom="12dp" />
+        android:elevation="4dp">
+
+    </org.osmdroid.views.MapView>
+
 
     <!-- Karta z danymi trasy -->
     <androidx.cardview.widget.CardView
@@ -36,7 +38,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
-        android:layout_marginBottom="12dp"
+
         app:cardUseCompatPadding="true"
         android:backgroundTint="@color/card_background">
 
@@ -202,7 +204,6 @@
         android:id="@+id/cardBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
