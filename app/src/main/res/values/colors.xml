@@ -23,4 +23,11 @@
     <color name="green_transparent">#CC4CAF50</color>
     <color name="red_transparent">#CCF44336</color>
 
+
+
+
+    <color name="background_dark">#121212</color>
+    <color name="primary_text_dark">#FFFFFF</color>
+    <color name="card_background_dark">#1E1E1E</color>
+
 </resources>

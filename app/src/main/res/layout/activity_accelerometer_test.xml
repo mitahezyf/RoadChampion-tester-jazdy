@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="@color/background">
 
     <!-- Nagłówek -->
     <TextView
@@ -73,7 +73,8 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:foreground="?android:attr/selectableItemBackground"
-        android:background="@color/background">
+        android:background="@color/background"
+        android:backgroundTint="@color/card_background">
 
         <LinearLayout
             android:id="@+id/buttonStartStop"
@@ -113,7 +114,8 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:foreground="?android:attr/selectableItemBackground"
-        android:background="@color/background">
+        android:background="@color/background"
+        android:backgroundTint="@color/card_background">
 
         <LinearLayout
             android:id="@+id/buttonBack"

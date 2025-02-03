@@ -39,7 +39,7 @@
     <string name="accelerometer_test">Test akcelerometru</string>
     <string name="vibration">Wibracje</string>
     <string name="change_profile_picture">Zmień zdjęcie profilowe</string>
-    <string name="theme_mode">Motyw</string>
+    <string name="theme_mode">Ciemny motyw</string>
 
     <string name="change_photo">Zmień zdjęcie</string>
     <string name="profile_picture">Zdjęcie profilowe</string>
