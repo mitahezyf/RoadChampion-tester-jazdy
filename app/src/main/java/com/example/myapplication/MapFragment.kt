@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,6 +10,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
@@ -23,6 +25,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
+@Suppress("DEPRECATION")
 class MapFragment : Fragment(R.layout.fragment_map), LocationListener, AccelerationListener {
 
     private lateinit var mapView: MapView
@@ -37,6 +40,15 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
     private var startTime: Long = 0L
     private var endTime: Long = 0L
 
+    private var accelerationCount = 0
+    private var brakingCount = 0
+
+    private lateinit var textAccelerationCount: TextView
+    private lateinit var textBrakingCount: TextView
+    private lateinit var textSpeed: TextView
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,6 +60,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        textSpeed = view.findViewById(R.id.textSpeed)
+        textAccelerationCount = view.findViewById(R.id.textAccelerations)
+        textBrakingCount = view.findViewById(R.id.textBrakings)
 
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
@@ -158,8 +174,12 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
         Log.d("MapFragment", "Akcelerometr - X: $x, Y: $y, Z: $z")
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
         val geoPoint = GeoPoint(location.latitude, location.longitude)
+
+        val speedKmH = location.speed * 3.6  // Konwersja z m/s na km/h
+        textSpeed.text = "Prędkość: %.2f km/h".format(speedKmH)
 
         if (currentLocationMarker == null) {
             currentLocationMarker = Marker(mapView).apply {
@@ -203,11 +223,38 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
 
     override fun onSuddenAccelerationDetected() {
         Log.d("MapFragment", "Wykryto nagłe przyspieszenie!")
+
+        accelerationCount++
+        updateAccelerationUI()
+
+
+        currentRouteId?.let { routeId ->
+            CoroutineScope(Dispatchers.IO).launch {
+                database.routeDao().updateAccelerationData(routeId, accelerationCount, brakingCount)
+            }
+        }
     }
 
     override fun onSuddenBrakingDetected() {
         Log.d("MapFragment", "Wykryto nagłe hamowanie!")
+        brakingCount++
+        updateAccelerationUI()
+
+
+        currentRouteId?.let { routeId ->
+            CoroutineScope(Dispatchers.IO).launch {
+                database.routeDao().updateAccelerationData(routeId, accelerationCount, brakingCount)
+            }
+        }
     }
+    @SuppressLint("SetTextI18n")
+    private fun updateAccelerationUI() {
+        requireActivity().runOnUiThread {
+            textAccelerationCount.text = "Nagłe przyspieszenia: $accelerationCount"
+            textBrakingCount.text = "Nagłe hamowania: $brakingCount"
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
