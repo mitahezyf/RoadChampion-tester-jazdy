@@ -49,4 +49,9 @@
     <string name="accel_y">Y: 0.00 m/s²</string>
     <string name="accel_z">Z: 0.00 m/s²</string>
 
+    <string name="accekerometer_test">Test Akcelerometru</string>
+    <string name="resting">Spoczynek</string>
+    <string name="toogle_start_stop">Start/Stop</string>
+
+
 </resources>

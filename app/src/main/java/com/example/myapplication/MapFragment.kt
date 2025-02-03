@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -10,7 +9,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
@@ -25,38 +23,19 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
-
-class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
+class MapFragment : Fragment(R.layout.fragment_map), LocationListener, AccelerationListener {
 
     private lateinit var mapView: MapView
     private lateinit var locationManager: LocationManager
-    private val geoPoints = mutableListOf<GeoPoint>()
-    private var isMapInitialized = false
-    private var currentLocationMarker: Marker? = null
-    private var startTime: Long = 0L
-    private var endTime: Long = 0L
+    private lateinit var acceleractionMonitor: AcceleractionMonitor
     private lateinit var database: AppDatabase
     private lateinit var routePointDao: RoutePointDao
     private var currentRouteId: Int? = null
     private var isTracking = false
-
-    private lateinit var acceleractionMonitor: AcceleractionMonitor
-
-    private var isFollowingUser = true
-
-
-
-
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            setupLocationUpdates()
-        } else {
-            Log.e("Permission", "Permission denied!")
-        }
-    }
+    private var currentLocationMarker: Marker? = null
+    private val geoPoints = mutableListOf<GeoPoint>()
+    private var startTime: Long = 0L
+    private var endTime: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,64 +46,43 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         )
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        database = AppDatabase.getInstance(requireContext())
-        routePointDao = database.routePointDao()
 
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
 
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        database = AppDatabase.getInstance(requireContext())
+        routePointDao = database.routePointDao()
 
-        initializeMapWithDefaultLocation()
-
-        acceleractionMonitor = AcceleractionMonitor(requireContext(), object : AccelerationListener {
-            override fun onSuddenAccelerationDetected() {
-                Log.d("MapFragment", "Wykryto gwałtowne przyspieszenie!")
-            }
-
-            override fun onSuddenBrakingDetected() {
-                Log.d("MapFragment", "Wykryto gwałtowne hamowanie!")
-            }
-        })
+        acceleractionMonitor = AcceleractionMonitor(requireContext(), this)
 
         val startButton = view.findViewById<CardView>(R.id.cardStart)
         val stopButton = view.findViewById<CardView>(R.id.cardStop)
         val backButton = view.findViewById<CardView>(R.id.cardBack)
 
-
-
-        startButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.default_button_color))
-        stopButton.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.default_button_color))
-
-
         startButton.setOnClickListener { startTracking() }
         stopButton.setOnClickListener { stopTracking() }
         backButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-
-
-
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             setupLocationUpdates()
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val lastRouteId = database.routeDao().getLastRouteId()
-            withContext(Dispatchers.Main) {
-                currentRouteId = lastRouteId
-                Log.d("MapFragment", "Przywrócono ostatnią trasę ID: $currentRouteId")
-            }
-        }
     }
 
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            setupLocationUpdates()
+        } else {
+            Log.e("Permission", "Brak uprawnień do lokalizacji!")
+        }
+    }
 
 
     private fun startTracking() {
@@ -132,6 +90,7 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
         startTime = System.currentTimeMillis()
         isTracking = true
+        geoPoints.clear()
 
         CoroutineScope(Dispatchers.IO).launch {
             val lastRouteId = database.routeDao().getLastRouteId()
@@ -150,9 +109,6 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
 
             withContext(Dispatchers.Main) {
                 currentRouteId = newRouteId
-                Log.d("MapFragment", "Rozpoczęto nową trasę o ID: $currentRouteId")
-
-
                 Toast.makeText(requireContext(), "Rozpoczęto nagrywanie trasy", Toast.LENGTH_SHORT).show()
             }
         }
@@ -180,18 +136,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             )
 
             withContext(Dispatchers.Main) {
-                Log.d("MapFragment", "Trasa ID: $currentRouteId zakończona i zapisana!")
-
-
                 Toast.makeText(requireContext(), "Zatrzymano nagrywanie trasy", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-
-
-
-
 
 
     private fun setupLocationUpdates() {
@@ -206,69 +154,11 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
             Log.e("Location", "Brak uprawnień do lokalizacji: ${e.message}")
         }
     }
+    override fun onAccelerationDataChanged(x: Float, y: Float, z: Float) {
+        Log.d("MapFragment", "Akcelerometr - X: $x, Y: $y, Z: $z")
+    }
 
-    @SuppressLint("DefaultLocale")
     override fun onLocationChanged(location: Location) {
-        val geoPoint = GeoPoint(location.latitude, location.longitude)
-
-        if (isFollowingUser) {
-            mapView.controller.animateTo(geoPoint)
-        }
-
-        if (!isMapInitialized) {
-            initializeMapAtLocation(location)
-            isMapInitialized = true
-        }
-        updateLocationOnMap(location)
-
-
-        val speedMps = location.speed
-        val speedKmh = speedMps * 3.6 // Przeliczenie na km/h
-
-
-        val speedTextView = view?.findViewById<TextView>(R.id.textSpeed)
-        speedTextView?.text = String.format("%.1f km/h", speedKmh)
-
-        if (isTracking) {
-            if (currentRouteId == -1) {
-                Log.e("MapFragment", "Błąd! currentRouteId jest -1, punkty nie będą zapisywane!")
-                return
-            }
-            geoPoints.add(geoPoint)
-
-            val newPoint = RoutePoint(
-                routeId = currentRouteId ?: 0,
-                latitude = location.latitude,
-                longitude = location.longitude,
-                timestamp = System.currentTimeMillis()
-            )
-
-            CoroutineScope(Dispatchers.IO).launch {
-                routePointDao.insertRoutePoint(newPoint)
-                Log.d("Database", "Zapisano punkt: $newPoint")
-            }
-        }
-    }
-
-
-    private fun initializeMapAtLocation(location: Location) {
-        val geoPoint = GeoPoint(location.latitude, location.longitude)
-        mapView.controller.apply {
-            setCenter(geoPoint)
-            setZoom(18.0)
-        }
-        Log.d("Map", "Mapa ustawiona na lokalizację: $geoPoint")
-    }
-    private fun initializeMapWithDefaultLocation() {
-        val defaultGeoPoint = GeoPoint(50.0413, 21.9990) // Rzeszow
-        mapView.controller.apply {
-            setCenter(defaultGeoPoint)
-            setZoom(15.0)
-        }
-        Log.d("Map", "Mapa zainicjalizowana na domyślnej lokalizacji.")
-    }
-
-    private fun updateLocationOnMap(location: Location) {
         val geoPoint = GeoPoint(location.latitude, location.longitude)
 
         if (currentLocationMarker == null) {
@@ -281,8 +171,24 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         } else {
             currentLocationMarker?.position = geoPoint
         }
-
+        mapView.controller.setZoom(18)
+        mapView.controller.animateTo(geoPoint)
         mapView.invalidate()
+
+        if (isTracking) {
+            geoPoints.add(geoPoint)
+
+            val newPoint = RoutePoint(
+                routeId = currentRouteId ?: 0,
+                latitude = location.latitude,
+                longitude = location.longitude,
+                timestamp = System.currentTimeMillis()
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                routePointDao.insertRoutePoint(newPoint)
+            }
+        }
     }
 
     private fun calculateTotalDistance(points: List<GeoPoint>): Float {
@@ -295,26 +201,23 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener {
         return totalDistance
     }
 
-    override fun onProviderEnabled(provider: String) {
-        Log.d("Location", "Provider $provider enabled")
+    override fun onSuddenAccelerationDetected() {
+        Log.d("MapFragment", "Wykryto nagłe przyspieszenie!")
     }
 
-    override fun onProviderDisabled(provider: String) {
-        Log.d("Location", "Provider $provider disabled")
+    override fun onSuddenBrakingDetected() {
+        Log.d("MapFragment", "Wykryto nagłe hamowanie!")
     }
 
     override fun onResume() {
         super.onResume()
         mapView.onResume()
         acceleractionMonitor.startMonitoring()
-
     }
 
     override fun onPause() {
         super.onPause()
         mapView.onPause()
         acceleractionMonitor.stopMonitoring()
-
     }
-
 }
