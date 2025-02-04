@@ -1,6 +1,6 @@
 Programowanie urządzeń mobilnych laboratorium L_X_ 
 
-# Dokumentacja projetu: **RoadChampion - licznyk gwałtownych przyśpieszeń i zahamowań**
+# Dokumentacja projetu: **Road Champion - liczik gwałtownych przyśpieszeń i zahamowań**
 
 ## Zespoł projetowy:
 Krzysztof Pomarański
@@ -19,7 +19,7 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
 ### Testowanie akcelerometru
   Użytkownik ma możliwość testowania akcelerometru czy wykrywa on gwałtowne przyśpieszenia/hamowania czy też jest w stanie wsględnego spoczynku
 
-## Panele / zakładki aplikacji 
+
 
 ## Panele / zakładki aplikacji 
 
