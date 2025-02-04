@@ -68,6 +68,10 @@ class MapFragment : Fragment(R.layout.fragment_map), LocationListener, Accelerat
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
 
+        val defaultGeoPoint = GeoPoint(50.041187, 21.999121) //Rzeszów
+        mapView.controller.setCenter(defaultGeoPoint)
+        mapView.controller.setZoom(18.0)
+
         locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         database = AppDatabase.getInstance(requireContext())
         routePointDao = database.routePointDao()
