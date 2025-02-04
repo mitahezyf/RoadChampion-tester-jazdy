@@ -20,9 +20,11 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
   Użytkownik ma możliwość testowania akcelerometru czy wykrywa on gwałtowne przyśpieszenia/hamowania czy też jest w stanie wsględnego spoczynku
 
 ## Panele / zakładki aplikacji 
-<div align="center">
+
+## Panele / zakładki aplikacji 
+
 | **Menu główne (jasny)** | **Menu główne (ciemny)** |
-|--------------------------|--------------------------|
+|-------------------------|-------------------------|
 | <img src="images/menu-glowne-bialy.png" width="300"/> | <img src="images/menu-glowne-czarny.png" width="300"/> |
 
 | **Nowa trasa (jasny)** | **Nowa trasa (ciemny)** |
@@ -40,7 +42,7 @@ Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas por
 | **Test akcelerometru** | **Zmiana profilowego** |
 |------------------------|-----------------------|
 | <img src="images/test-akcelerometru-czarny.png" width="300"/> | <img src="images/zmiana-profilowego-czarne.png" width="300"/> |
-</div>
+
 
 ## Baza danych
 <div align="center">
