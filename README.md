@@ -61,5 +61,3 @@ Baza danych składa się z 2 tabel. Pierwsza z nich przechowuje dane na temat cz
 
 Aplikacja nie potrzebuje żadnej wstępnej konfiguracji, jest w postaci "install&play"
 
-### Link do pobrania pliku APK aplikacji
-https://urstudrzeszow-my.sharepoint.com/:u:/g/personal/kp125199_stud_ur_edu_pl/EZDHTs_lPfhKtGu2xCAPXtcBnCWmJAaIhlLCi44fvC3aoA?e=zX17DZ
