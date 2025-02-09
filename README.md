@@ -2,8 +2,6 @@ Programowanie urządzeń mobilnych laboratorium L_X_
 
 # Dokumentacja projetu: **Road Champion - liczik gwałtownych przyśpieszeń i zahamowań**
 
-## Zespoł projetowy:
-Krzysztof Pomarański
 
 ## Opis projektu
 Aplikacja ma za zadanie mierzyć ilość gwałtownych przyśpieszeń podczas poruszania się, dodatkowymi funkcjami są także obliczanie średniej prędkości z pokonanej trasy oraz możliwość podglądania jak dana trasa wyglądała na mapie po jej zakończeniu.
